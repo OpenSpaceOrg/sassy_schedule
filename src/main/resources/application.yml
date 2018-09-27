@@ -1,0 +1,16 @@
+
+spring:
+  main:
+    banner_mode: 'OFF'
+  jmx:
+    enabled: false
+server:
+    port: ${APP_PORT:9000}
+
+logging:
+  path: ${LOGGING_PATH:./.log}
+  file: ${logging.path}/app.log
+  file.max-history: 3
+  pattern:
+    console: "%level [%d{ISO8601, UTC}] %thread cID=%X{Request-Tracker:-NA} conf=%X{conf:-NA}, %class{0}:%line %msg%n"
+    file: "%level [%d{ISO8601, UTC}] %thread cID=%X{Request-Tracker:-NA} conf=%X{conf:-NA}, %class{0}:%line %msg%n"
