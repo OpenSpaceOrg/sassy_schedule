@@ -1,0 +1,133 @@
+openapi: 3.0.0
+servers:
+  - description: Sassy Schedule
+    url: https://virtserver.swaggerhub.com/jasontrublu/Sassy-Schedule/1.0.0
+info:
+  description: API for scheduling
+  version: "1.0.0"
+  title: Sassy Schedule API
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+  - name: public
+    description: Operations available to regular developers
+  - name: editors
+    description: Available for authorised editors
+paths:
+  /konopas:
+    get:
+      tags:
+        - public
+      summary: get konOpas v1 schedule
+      description: |
+        By passing in the appropriate options, you can search for
+        available inventory in the system
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KonopasItem'
+    post:
+      tags:
+        - admins
+      summary: adds an inventory item
+      operationId: addInventory
+      description: Adds an item to the system
+      responses:
+        '201':
+          description: item created
+        '400':
+          description: 'invalid input, object invalid'
+        '409':
+          description: an existing item already exists
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KonopasItem'
+        description: Inventory item to add
+  /conferences:
+    get:
+      description: get list of conferences
+      tags:
+      - public
+      responses:
+        '200':
+          description: returns a list of conferences
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Conference'
+    post:
+      description: add a conference
+      tags:
+      - admins
+      responses:
+        '200':
+          description: "conference stored"
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+components:
+  schemas:
+    KonopasItem:
+      type: object
+      required:
+        - id
+        - title
+        - date
+        - time
+        - mins
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        date:
+          type: string
+        time:
+          type: string
+        mins:
+          type: string
+          description: duration of session, e.g. "90"
+        loc:
+          type: array
+          items:
+            type: string
+        people:
+          type: array
+          items:
+            $ref: "#/components/schemas/People"
+        desc:
+          type: string
+          description: Every prögrammé item really ought to have an explanation, unless it's really evident from the title itself what it'll be about.
+    People:
+      type: object
+      required: [ id ]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    Conference:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
